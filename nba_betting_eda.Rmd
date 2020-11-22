@@ -1,0 +1,14 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(readr)
+```
+
+```{r}
+odds_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.csv"))
+odds_data_2<-odds_data[odds_data$season>=2009,]
+```
+
