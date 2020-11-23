@@ -8,7 +8,31 @@ library(readr)
 ```
 
 ```{r}
-odds_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.csv"))
-odds_data_2<-odds_data[odds_data$season>=2009,]
+prob_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.csv"))
+prob_data_2<-prob_data[prob_data$season>=2009,]
+```
+
+```{r}
+odds_data<-read_csv("~/Desktop/nba_betting/csv_betting_data/nba odds 2008-09.csv")
+odds_data$season_start_year<-2008
+
+#file_name<-"~/Desktop/nba_betting/csv_betting_data/nba odds 2008-09.csv"
+
+for (i in 9:19){
+  start_year<-as.character(i)
+  end_year<-as.character(i+1)
+  
+  if (nchar(start_year)==1){start_year<-paste0("0",start_year)}
+  if (nchar(end_year)==1){end_year<-paste0("0",end_year)}
+  
+  file_name<-glue("~/Desktop/nba_betting/csv_betting_data/nba odds 20{start_year}-{end_year}.csv")
+  spc_file<-read_csv(file_name)
+  spc_file<-spc_file[,colSums(is.na(spc_file))<nrow(spc_file)]
+  
+  spc_file$season_start_year<-2000+i
+  
+  odds_data<-rbind(odds_data,spc_file)
+}
+
 ```
 
