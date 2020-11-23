@@ -8,7 +8,20 @@ library(readr)
 ```
 
 ```{r}
-prob_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.csv"))
+prob_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.csv"
+                                 ,col_type=cols(.default="?"
+                                                ,playoff="c"
+                                                ,'carm-elo1_pre'="n"
+                                                ,'carm-elo2_pre'="n"
+                                                ,'carm-elo_prob1'="n"
+                                                ,'carm-elo_prob2'="n"
+                                                ,'carm-elo1_post'="n"
+                                                ,'carm-elo2_post'="n"
+                                                ,raptor1_pre="n"
+                                                ,raptor2_pre="n"
+                                                ,raptor_prob1="n"
+                                                ,raptor_prob2="n"
+                                                )))
 prob_data_2<-prob_data[prob_data$season>=2009,]
 ```
 
