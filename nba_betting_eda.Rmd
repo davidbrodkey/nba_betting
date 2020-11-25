@@ -5,6 +5,7 @@ output: html_notebook
 
 ```{r}
 library(readr)
+library(glue)
 ```
 
 ```{r}
@@ -22,7 +23,7 @@ prob_data <- data.frame(read_csv("~/Desktop/nba_betting/538_nba_data_2020_11_21.
                                                 ,raptor_prob1="n"
                                                 ,raptor_prob2="n"
                                                 )))
-prob_data_2<-prob_data[prob_data$season>=2009,]
+prob_data<-prob_data[prob_data$season>=2009,]
 ```
 
 ```{r}
@@ -42,10 +43,39 @@ for (i in 9:19){
   spc_file<-read_csv(file_name)
   spc_file<-spc_file[,colSums(is.na(spc_file))<nrow(spc_file)]
   
+  spc_file<-spc_file[!rowSums(is.na(spc_file))==ncol(spc_file),]
+  
   spc_file$season_start_year<-2000+i
   
   odds_data<-rbind(odds_data,spc_file)
 }
 
+```
+
+```{r}
+#Pre-processing of odds_data to get it ready to be joined with
+odds_data<-data.frame(odds_data)
+odds_data$Date<-as.character(odds_data$Date)
+
+odds_data$day<-substr(odds_data$Date,nchar(odds_data$Date)-1,nchar(odds_data$Date))
+odds_data$month<-substr(odds_data$Date,1,nchar(odds_data$Date)-2)
+
+odds_data$year<-NA
+
+first_year_occ<-match(unique(odds_data$season_start_year),odds_data$season_start_year)
+odds_data$year[first_year_occ]<-odds_data$season_start_year[first_year_occ]
+
+for (i in 1:nrow(odds_data)){
+  
+  if (is.na(odds_data[i,"year"])){
+    if(odds_data[i,"month"]>=odds_data[(i-1),"month"]){
+      odds_data[i,"year"]<-odds_data[(i-1),"year"]
+    } else {
+      odds_data[i,"year"]<-odds_data[(i-1),"year"]+1
+    }
+  }
+}
+
+odds_data$game_date<-as.Date(paste0(odds_data$year,'-',odds_data$month,'-',odds_data$day))
 ```
 
