@@ -84,8 +84,6 @@ odds_data<-odds_data[,c("game_date","Team","VH","X1st","X2nd","X3rd","X4th","Fin
 ```
 
 ```{r}
-prob_data_team1<-prob_data[,c("date","season","neutral","playoff","team1","elo1_pre","elo_prob1","elo1_post","carm.elo1_pre","carm.elo_prob1","carm.elo1_post","raptor1_pre","raptor_prob1","score1","")]
-
 both_cols<-c("date","season","neutral","playoff")
 
 team_1_cols<-c("team1","elo1_pre","elo_prob1","elo1_post","carm.elo1_pre","carm.elo_prob1","carm.elo1_post","raptor1_pre","raptor_prob1","score1")
@@ -97,7 +95,12 @@ prob_data_team2<-prob_data[,c(both_cols,team_2_cols,team_1_cols)]
 
 names_both_cols<-c("date","season","neutral","playoff")
 generic_names<-c("team","elo_pre","elo_prob","elo_post","carm.elo_pre","carm.elo_prob","carm.elo_post","raptor_pre","raptor_prob","score")
+self_names<-paste0("self_",generic_names)
+opp_names<-paste0("opp_",generic_names)
 
-#paste0("self_",generic_names)
+colnames(prob_data_team1)<-c(names_both_cols,self_names,opp_names)
+colnames(prob_data_team2)<-c(names_both_cols,self_names,opp_names)
+
+prob_team_data<-rbind(prob_data_team1,prob_data_team2)
 ```
 
