@@ -77,10 +77,14 @@ for (i in 1:nrow(odds_data)){
 }
 
 odds_data$game_date<-as.Date(paste0(odds_data$year,'-',odds_data$month,'-',odds_data$day))
+
+odds_data$Team[odds_data$Team=="LA Clippers"]<-"LAClippers"
+odds_data$Team[odds_data$Team=="Oklahoma City"]<-"OklahomaCity"
+
 ```
 
 ```{r}
-odds_data<-odds_data[,c("game_date","Team","VH","X1st","X2nd","X3rd","X4th","Final","Open","Close","ML","X2H")]
+odds_data<-odds_data[,c("game_date","Team","Final","ML")]
 ```
 
 ```{r}
@@ -102,5 +106,27 @@ colnames(prob_data_team1)<-c(names_both_cols,self_names,opp_names)
 colnames(prob_data_team2)<-c(names_both_cols,self_names,opp_names)
 
 prob_team_data<-rbind(prob_data_team1,prob_data_team2)
+```
+
+```{r}
+#Add team abbreviations
+
+full_name<-c("Atlanta","Boston","Brooklyn","Charlotte","Chicago","Cleveland","Dallas","Denver","Detroit","GoldenState","Houston","Indiana","LAClippers","LALakers","Memphis","Miami","Milwaukee","Minnesota","NewJersey","NewOrleans","NewYork","OklahomaCity","Orlando","Philadelphia","Phoenix","Portland","Sacramento","SanAntonio","Toronto","Utah","Washington")
+
+abbrev_name<-c("ATL","BOS","BRK","CHO","CHI","CLE","DAL","DEN","DET","GSW","HOU","IND","LAC","LAL","MEM","MIA","MIL","MIN","NJN","NOP","NYK","OKC","ORL","PHI","PHO","POR","SAC","SAS","TOR","UTA","WAS")
+
+name_conversion<-data.frame(full_name,abbrev_name)
+
+odds_data<-merge(x=odds_data,y=name_conversion,by.x="Team",by.y="full_name",all.x=TRUE)
+```
+
+
+
+```{r}
+#Merging prob data and odds data
+merge_df<-merge(x=odds_data,y=prob_team_data,all.x=TRUE,by.x=c("game_date","abbrev_name","Final"),by.y=c("date","self_team","self_score"))
+
+#Some merge issues
+#aa<-merge_df[is.na(merge_df$opp_score),]
 ```
 
