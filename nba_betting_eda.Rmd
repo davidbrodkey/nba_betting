@@ -57,8 +57,8 @@ for (i in 9:19){
 odds_data<-data.frame(odds_data)
 odds_data$Date<-as.character(odds_data$Date)
 
-odds_data$day<-substr(odds_data$Date,nchar(odds_data$Date)-1,nchar(odds_data$Date))
-odds_data$month<-substr(odds_data$Date,1,nchar(odds_data$Date)-2)
+odds_data$day<-as.numeric(substr(odds_data$Date,nchar(odds_data$Date)-1,nchar(odds_data$Date)))
+odds_data$month<-as.numeric(substr(odds_data$Date,1,nchar(odds_data$Date)-2))
 
 odds_data$year<-NA
 
@@ -123,10 +123,15 @@ odds_data<-merge(x=odds_data,y=name_conversion,by.x="Team",by.y="full_name",all.
 
 
 ```{r}
-#Merging prob data and odds data
+#Merging prob data and odds data & adding bet_decimal
 merge_df<-merge(x=odds_data,y=prob_team_data,all.x=TRUE,by.x=c("game_date","abbrev_name","Final"),by.y=c("date","self_team","self_score"))
 
-#Some merge issues
+#Some merge issues only 37 records so I will sicard and move on. Could be manually fixed late.
+#Did some investigation a lot of small data issues like date of by a 1 day or total points off by 1.
 #aa<-merge_df[is.na(merge_df$opp_score),]
+
+merge_df<-merge_df[!is.na(merge_df$self_elo_prob),]
+
+merge_df$bet_decimal<-ifelse(merge_df$ML<0,(-100/merge_df$ML)+1,(merge_df$ML/100)+1)
 ```
 
