@@ -1,14 +1,24 @@
 library(shiny)
+library(readr)
+library(ggplot2)
+library(shinyWidgets)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Old Faithful Geyser Data"),
+   titlePanel("NBA Betting / Probability"),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
+        pickerInput(inputId="selected_season"
+                    ,label="Season Filter"
+                    ,choices=2009:2020
+                    ,multiple=TRUE
+                    ,selected=2009:2020)
+        ,
+        
          sliderInput("bins",
                      "Number of bins:",
                      min = 1,
@@ -18,7 +28,7 @@ ui <- fluidPage(
       
       # Show a plot of the generated distribution
       mainPanel(
-         plotOutput("distPlot")
+         plotOutput("scatter_plot")
       )
    )
 )
@@ -26,14 +36,22 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
    
-   output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2] 
-      bins <- seq(min(x), max(x), length.out = input$bins + 1)
-      
-      # draw the histogram with the specified number of bins
-      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+  raw_df<-data.frame(read_csv("~/Desktop/nba_betting/nba_betting_shiny/preped_nba_betting_odds.csv"))
+  
+  
+  filt_df<-reactive({
+    df<-raw_df
+    
+    df<-df[df$season %in% input$selected_season,]
+    
+    df
+  })
+  
+   output$scatter_plot <- renderPlot({
+     ggplot(data=filt_df(),aes(x=self_elo_prob,y=bet_decimal))+
+       geom_point()
    })
+   
 }
 
 # Run the application 
