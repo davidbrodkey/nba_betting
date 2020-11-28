@@ -132,6 +132,14 @@ merge_df<-merge(x=odds_data,y=prob_team_data,all.x=TRUE,by.x=c("game_date","abbr
 
 merge_df<-merge_df[!is.na(merge_df$self_elo_prob),]
 
-merge_df$bet_decimal<-ifelse(merge_df$ML<0,(-100/merge_df$ML)+1,(merge_df$ML/100)+1)
+
 ```
+
+```{r}
+merge_df$bet_decimal<-ifelse(merge_df$ML<0,(-100/merge_df$ML)+1,(merge_df$ML/100)+1)
+merge_df$winnings<-ifelse(merge_df$Final>merge_df$opp_score,merge_df$bet_decimal,0)
+
+write.csv(merge_df,file="preped_nba_betting_odds.csv")
+```
+
 
