@@ -38,3 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .Rproj.user
+
+#Other Stuff
+.DS_Store
+nba_betting_eda.nb.html
