@@ -17,16 +17,9 @@ ui <- fluidPage(
                     ,choices=2009:2020
                     ,multiple=TRUE
                     ,selected=2009:2020)
-        ,
         
-         sliderInput("bins",
-                     "Number of bins:",
-                     min = 1,
-                     max = 50,
-                     value = 30)
       ),
-      
-      # Show a plot of the generated distribution
+
       mainPanel(
          plotOutput("scatter_plot")
       )
