@@ -3,13 +3,11 @@ library(readr)
 library(ggplot2)
 library(shinyWidgets)
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
    
    # Application title
    titlePanel("NBA Betting / Probability"),
    
-   # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
         pickerInput(inputId="selected_season"
@@ -17,6 +15,17 @@ ui <- fluidPage(
                     ,choices=2009:2020
                     ,multiple=TRUE
                     ,selected=2009:2020)
+        ,
+        pickerInput(inputId="x_axis"
+                    ,label="X Axis Variable"
+                    ,choices=c("self_elo_prob","self_carm.elo_prob","self_raptor_prob","bet_decimal","winnings")
+                    ,selected="self_elo_prob")
+        ,
+        pickerInput(inputId="y_axis"
+                    ,label="Y Axis Variable"
+                    ,choices=c("self_elo_prob","self_carm.elo_prob","self_raptor_prob","bet_decimal","winnings")
+                    ,selected="bet_decimal")
+        
         
       ),
 
@@ -26,7 +35,6 @@ ui <- fluidPage(
    )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
    
   raw_df<-data.frame(read_csv("~/Desktop/nba_betting/nba_betting_shiny/preped_nba_betting_odds.csv"))
@@ -41,7 +49,8 @@ server <- function(input, output) {
   })
   
    output$scatter_plot <- renderPlot({
-     ggplot(data=filt_df(),aes(x=self_elo_prob,y=bet_decimal))+
+     
+     ggplot(data=filt_df(),aes_string(x=input$x_axis,y=input$y_axis))+
        geom_point()
    })
    
