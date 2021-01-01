@@ -28,6 +28,10 @@ ui <- fluidPage(
                     ,label="Y Axis Variable"
                     ,choices=c("self_elo_prob","self_carm.elo_prob","self_raptor_prob","bet_decimal","winnings","random")
                     ,selected="bet_decimal")
+        ,
+        hr()
+        ,
+        h3("Method Tester")
         
         
       ),
