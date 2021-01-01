@@ -14,7 +14,10 @@ ui <- fluidPage(
                     ,label="Season Filter"
                     ,choices=2009:2020
                     ,multiple=TRUE
-                    ,selected=2009:2020)
+                    ,selected=2009:2020
+                    ,pickerOptions(actionsBox=TRUE))
+        ,
+        helpText("Carm.Elo only available 2016-2019 \n Raptor only available 2019-2020")
         ,
         pickerInput(inputId="x_axis"
                     ,label="X Axis Variable"
@@ -48,7 +51,7 @@ server <- function(input, output) {
     
     df$bet_result<-ifelse(df$winnings>0,"Good Bet","Bad Bet")
     df$random<-runif(nrow(df))
-    
+    #browser()
     df
   })
   
